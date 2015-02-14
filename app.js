@@ -18,6 +18,15 @@ function callSite() {
   counter++;
 }
 
+var callSiteCode = [
+  "stack().forEach(function (callsite, i) {",
+  "console.log('%s counter: %s, level: %s, type: %s, function: %s, method: %s, filename: %s, line: %s, column: %s',",
+  "new Array(i + 1).join(' '), counter, i, callsite.getTypeName(), callsite.getFunctionName(), callsite.getMethodName(), callsite.getFileName(),",
+  "callsite.getLineNumber(), callsite.getColumnNumber());",
+  "});",
+  "counter++;"
+].join('');
+
 //function below scans the function string line by line
 //but i'm not going to do it any more
 //b/c let's assume there's only one recursive function on the outtest layer
@@ -54,18 +63,15 @@ function inject(str) {
     functionLine = transformFunction(functionLine);
     // functionLine.
     var postStr = str.split(functionRe);
-    var latterPart = postStr[1]
-      // concat(postStr[0]).
-      // concat('\n').
-      // concat(callSite.toString()).
-      // concat(postStr[1]).
-      // concat('\n');
+    var latterPart = getRidOfBracket(postStr[1]);
+
+    endStr = functionLine.concat(postStr[0]).concat('"').concat(callSiteCode).concat(latterPart).concat('");');
 
   } else {
-    console.log('no function (ಥ_ಥ)');
+    console.log('no function ಥ_ಥ');
     endStr += str;
   }
-  console.log(endStr);
+  console.log('endStr ' + endStr);
   return endStr;
 }
 
@@ -86,26 +92,27 @@ function transformFunction(str) {
   console.log('functionName ' + functionName);
 
   var param = '';
-  var paramRe = /\(\w+\)/;
+  var paramRe = /\(\w+\)/g;
   if (str.match(paramRe) !== null) {
     param = str.match(paramRe)[0].replace('(', '').replace(')', '');
+    param = param.replace(',', '","');
+    param = ('"').concat(param).concat('"');
   }
   console.log('param ' + param);
 
-  newFunctionLine = 'var '.concat(functionName).concat(' = new Function (').concat(param).concat(', ')
+  newFunctionLine = 'var'.concat(functionName).concat(' = new Function (').concat(param).concat(', ');
 
   return newFunctionLine;
 
 }
 
 function getRidOfBracket(str) {
-  for (var i = str.length; i >= 0; i--) {
-    if (str[i] === '}') {
-
-      break;
-    }
-
+  var strCopy = '';
+  for (var i = 0; i < str.length - 1; i++) {
+    strCopy += str[i];
   }
+  //console.log('getRidOfBracket ' + strCopy);
+  return strCopy;
 }
 
 function evaluate(str) {
@@ -119,24 +126,24 @@ function evaluate(str) {
   }
 }
 
-function fib(num) {
-  if (num === 0) return 0;
-  if (num === 1) return 1;
-  return fib(num - 1) + fib(num - 2);
-}
+// function fib(num) {
+//   if (num === 0) return 0;
+//   if (num === 1) return 1;
+//   return fib(num - 1) + fib(num - 2);
+// }
 
-// var fibStr = [
-//   "function fib(num){",
-//   "if (num === 0) return 0;",
-//   "if (num === 1) return 1;",
-//   "return fib(num - 1) + fib(num - 2);",
-//   "}"
-// ]
+var fibStr = [
+  "function fib(num){",
+  "if (num === 0) return 0;",
+  "if (num === 1) return 1;",
+  "return fib(num - 1) + fib(num - 2);",
+  "}"
+].join('');
 
 //console.log(fib)
 //console.log(fib.toString())
 
-evaluate(inject(fib.toString()));
+evaluate(inject(fibStr));
 
-//console.log(fib);
-//fib(5);
+console.log(fib);
+fib(5);
