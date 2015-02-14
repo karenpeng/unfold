@@ -107,10 +107,7 @@ function transformFunction(str) {
 }
 
 function getRidOfBracket(str) {
-  var strCopy = '';
-  for (var i = 0; i < str.length - 1; i++) {
-    strCopy += str[i];
-  }
+  var strCopy = str.slice(0, -1);
   //console.log('getRidOfBracket ' + strCopy);
   return strCopy;
 }
