@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title></title>
+  <style type="text/css" media="screen">
+    #editor {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="editor1">function fib(num) {
+   if (num === 0) return 0;
+   if (num === 1) return 1;
+   return fib(num - 1) + fib(num - 2);
+  }</div>
+  <div id="editor2">fib(6);</div>
+  <button id="imabutton">Click Me</button>
+</body>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.8/ace.js"></script>
+<script>
+    var editor1 = ace.edit("editor1");
+    editor1.setTheme("ace/theme/monokai");
+    editor1.getSession().setMode("ace/mode/javascript");
+    document.getElementById('imabutton').onclick = function(){
+      var codeStr = editor1.getValue();
+      //do something with codeStr
+    }
+</script>
+<script src="bundle.js"></script>
+</html>
