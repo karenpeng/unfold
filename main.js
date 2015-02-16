@@ -16,7 +16,7 @@ var fibSources = [
 var callSource = 'fib(6);';
 
 var analyser = require('./analyser.js');
-var formObject = require('./formObject');
+var formObject = require('./object.js');
 
 // var fib = inject(fibSources);
 // var res = evaluate(fib, 6);

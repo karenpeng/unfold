@@ -88,15 +88,16 @@ Analyser.prototype.evaluator = function (fn, paramSource) {
 
   function getArgument(source) {
     source = source.replace(argumentRe, getRidOfBracket);
+    source = souce.split(',');
     return source;
   }
 
-  var params = ? ? ?
+  var params = getArgument(paramSource);
 
-    if (!Array.isArray(params)) {
-      params = [params];
-    }
-    // 执行的时候需要把 callsite 传递进去
+  if (!Array.isArray(params)) {
+    params = [params];
+  }
+  // 执行的时候需要把 callsite 传递进去
   params.push(callsite);
   // 拿一个变量来存放 fn 执行时产生的堆栈信息
   // 执行函数
