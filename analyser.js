@@ -6,7 +6,7 @@ function Analyser() {
 
 }
 
-Analyser.prototype.injector = function (defineSource) {
+Analyser.injector = function (defineSource) {
 
   // function fib() {} 形式的正则
   // 函数名和参数列表的地方用括号括起来
@@ -34,7 +34,7 @@ Analyser.prototype.injector = function (defineSource) {
     var fnName = res[1];
 
     // 解析参数，拿到参数列表
-    var params = res[2].trim().split(/\*,\*/);
+    var params = res[2].trim().split(/\s*,\s*/);
     // 注入 callsite
     source = source
       .replace(functionReG, addCallsite)
@@ -77,29 +77,33 @@ Analyser.prototype.injector = function (defineSource) {
 
 }
 
-Analyser.prototype.evaluator = function (fn, paramSource) {
+Analyser.evaluator = function (fn, paramSource) {
 
-  var argumentRe = /\((.*?)\)/;
+  var paramRe = /\(.*\)/;
 
-  function getRidOfBracket(str) {
-    str = str.slice(1, str.length - 1);
-    return str;
+  function getParams(str) {
+    var paramArray = str.slice(1, str.length - 1).trim().split('\s*,\s*');
+    return paramArray;
   }
 
-  function getArgument(source) {
-    source = source.replace(argumentRe, getRidOfBracket);
-    source = souce.split(',');
-    return source;
+  function evaluate(fn, str) {
+
+    var res = str.match(paramRe);
+    if (!res) {
+      throw new Error('can not found parameter');
+    }
+
+    var params = getParams(res[0]);
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+    // 执行的时候需要把 callsite 传递进去
+    params.push(callsite);
+    // 拿一个变量来存放 fn 执行时产生的堆栈信息
+    // 执行函数
+    return result = fn.apply(null, params);
   }
 
-  var params = getArgument(paramSource);
-
-  if (!Array.isArray(params)) {
-    params = [params];
-  }
-  // 执行的时候需要把 callsite 传递进去
-  params.push(callsite);
-  // 拿一个变量来存放 fn 执行时产生的堆栈信息
-  // 执行函数
-  return result = fn.apply(null, params);
+  return evaluate(fn, paramSource);
 }

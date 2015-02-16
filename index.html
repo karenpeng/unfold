@@ -3,12 +3,23 @@
 <head>
   <title></title>
   <style type="text/css" media="screen">
-    #editor {
+    #editor1 {
         position: absolute;
+        height: 70%;
         top: 0;
+        right: 0;
+        bottom: 30%;
+        left: 0;
+        width: 600px;
+    }
+    #editor2 {
+        position: absolute;
+        height: 30%;
+        top: 70%;
         right: 0;
         bottom: 0;
         left: 0;
+        width: 600px;
     }
   </style>
 </head>
@@ -26,6 +37,10 @@
     var editor1 = ace.edit("editor1");
     editor1.setTheme("ace/theme/monokai");
     editor1.getSession().setMode("ace/mode/javascript");
+
+    var editor2 = ace.edit("editor2");
+    editor2.setTheme("ace/theme/monokai");
+    editor2.getSession().setMode("ace/mode/javascript");
     document.getElementById('imabutton').onclick = function(){
       var codeStr = editor1.getValue();
       //do something with codeStr

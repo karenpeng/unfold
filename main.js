@@ -23,13 +23,17 @@ var formObject = require('./object.js');
 
 var fib = analyser.injector(fibSources);
 var res = analyser.evaluator(fib, callSource);
+//var res = eval(callSource);
 
-formObject(res);
+//formObject(res);
 
 // 输出结果
 
 console.log('generate fib function:');
-console.log(fib.toString());
-console.log();
+console.log(fib);
+// var a = '';
+// eval('a = fib(6)');
+// console.log(a);
+//console.log(fib(6))
 
 console.log('fib result: ', res.result);
