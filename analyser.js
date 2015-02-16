@@ -27,7 +27,7 @@ Analyser.injector = function (defineSource) {
     // 将第一个 function 匹配到，需要知道我们要调用一个什么样的函数
     var res = source.match(functionRe);
     if (!res) {
-      throw new Error('can not found function');
+      throw new Error('function not found');
     }
 
     // 正则执行 match 后的第二个参数会是函数名
@@ -82,7 +82,7 @@ Analyser.evaluator = function (fn, paramSource) {
   var paramRe = /\(.*\)/;
 
   function getParams(str) {
-    var paramArray = str.slice(1, str.length - 1).trim().split('\s*,\s*');
+    var paramArray = str.slice(1, str.length - 1).trim().split(/\s*,\s*/);
     return paramArray;
   }
 
@@ -90,7 +90,7 @@ Analyser.evaluator = function (fn, paramSource) {
 
     var res = str.match(paramRe);
     if (!res) {
-      throw new Error('can not found parameter');
+      throw new Error('parameter not found');
     }
 
     var params = getParams(res[0]);

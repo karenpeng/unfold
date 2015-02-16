@@ -1,3 +1,6 @@
+var analyser = require('./analyser.js');
+var formObject = require('./object.js');
+
 //1.inject callsite
 //2.call it
 //3.get callste data
@@ -15,15 +18,11 @@ var fibSources = [
 
 var callSource = 'fib(6);';
 
-var analyser = require('./analyser.js');
-var formObject = require('./object.js');
-
 // var fib = inject(fibSources);
 // var res = evaluate(fib, 6);
 
 var fib = analyser.injector(fibSources);
 var res = analyser.evaluator(fib, callSource);
-//var res = eval(callSource);
 
 //formObject(res);
 
@@ -37,3 +36,5 @@ console.log(fib);
 //console.log(fib(6))
 
 console.log('fib result: ', res.result);
+
+formObject(res);

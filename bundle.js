@@ -28,7 +28,7 @@ Analyser.injector = function (defineSource) {
     // 将第一个 function 匹配到，需要知道我们要调用一个什么样的函数
     var res = source.match(functionRe);
     if (!res) {
-      throw new Error('can not found function');
+      throw new Error('function not found');
     }
 
     // 正则执行 match 后的第二个参数会是函数名
@@ -83,7 +83,7 @@ Analyser.evaluator = function (fn, paramSource) {
   var paramRe = /\(.*\)/;
 
   function getParams(str) {
-    var paramArray = str.slice(1, str.length - 1).trim().split('\s*,\s*');
+    var paramArray = str.slice(1, str.length - 1).trim().split(/\s*,\s*/);
     return paramArray;
   }
 
@@ -91,7 +91,7 @@ Analyser.evaluator = function (fn, paramSource) {
 
     var res = str.match(paramRe);
     if (!res) {
-      throw new Error('can not found parameter');
+      throw new Error('parameter not found');
     }
 
     var params = getParams(res[0]);
@@ -109,6 +109,9 @@ Analyser.evaluator = function (fn, paramSource) {
   return evaluate(fn, paramSource);
 }
 },{"callsite":"/Users/karen/Documents/my_project/recursivParser/node_modules/callsite/index.js"}],"/Users/karen/Documents/my_project/recursivParser/main.js":[function(require,module,exports){
+var analyser = require('./analyser.js');
+var formObject = require('./object.js');
+
 //1.inject callsite
 //2.call it
 //3.get callste data
@@ -126,15 +129,11 @@ var fibSources = [
 
 var callSource = 'fib(6);';
 
-var analyser = require('./analyser.js');
-var formObject = require('./object.js');
-
 // var fib = inject(fibSources);
 // var res = evaluate(fib, 6);
 
 var fib = analyser.injector(fibSources);
 var res = analyser.evaluator(fib, callSource);
-//var res = eval(callSource);
 
 //formObject(res);
 
@@ -148,6 +147,8 @@ console.log(fib);
 //console.log(fib(6))
 
 console.log('fib result: ', res.result);
+
+formObject(res);
 },{"./analyser.js":"/Users/karen/Documents/my_project/recursivParser/analyser.js","./object.js":"/Users/karen/Documents/my_project/recursivParser/object.js"}],"/Users/karen/Documents/my_project/recursivParser/node_modules/callsite/index.js":[function(require,module,exports){
 
 module.exports = function(){
