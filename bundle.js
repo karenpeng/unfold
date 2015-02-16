@@ -1,13 +1,40 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/karen/Documents/my_project/recursivParser/analyser.js":[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/karen/Documents/my_project/recursivParser/evaluate.js":[function(require,module,exports){
 var callsite = require('callsite');
 
-module.exports = Analyser;
+module.exports = function (fn, paramSource) {
 
-function Analyser() {
+  var paramRe = /\(.*\)/;
 
+  function getParams(str) {
+    var paramArray = str.slice(1, str.length - 1).trim().split(/\s*,\s*/);
+    return paramArray;
+  }
+
+  function evaluate(fn, str) {
+
+    console.log(str)
+
+    var res = str.match(paramRe);
+    if (!res) {
+      throw new Error('parameter not found');
+    }
+
+    var params = getParams(res[0]);
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+    // 执行的时候需要把 callsite 传递进去
+    params.push(callsite);
+    // 拿一个变量来存放 fn 执行时产生的堆栈信息
+    // 执行函数
+    return result = fn.apply(null, params);
+  }
+
+  return evaluate(fn, paramSource);
 }
-
-Analyser.injector = function (defineSource) {
+},{"callsite":"/Users/karen/Documents/my_project/recursivParser/node_modules/callsite/index.js"}],"/Users/karen/Documents/my_project/recursivParser/inject.js":[function(require,module,exports){
+module.exports = function (defineSource) {
 
   // function fib() {} 形式的正则
   // 函数名和参数列表的地方用括号括起来
@@ -71,47 +98,14 @@ Analyser.injector = function (defineSource) {
 
   function addReturn(str, val) {
     // 记录下返回值，用 `,` 操作符，保证 if (num === 0) return 0; 的情况下也能够正确执行。
+    // 如果函数本身不带return, 则返回undefined
     return 'return ($$infos$$.result = (' + val + ')), $$infos$$.result;'
   }
 
   return inject(defineSource);
 
 }
-
-Analyser.evaluator = function (fn, paramSource) {
-
-  var paramRe = /\(.*\)/;
-
-  function getParams(str) {
-    var paramArray = str.slice(1, str.length - 1).trim().split(/\s*,\s*/);
-    return paramArray;
-  }
-
-  function evaluate(fn, str) {
-
-    var res = str.match(paramRe);
-    if (!res) {
-      throw new Error('parameter not found');
-    }
-
-    var params = getParams(res[0]);
-
-    if (!Array.isArray(params)) {
-      params = [params];
-    }
-    // 执行的时候需要把 callsite 传递进去
-    params.push(callsite);
-    // 拿一个变量来存放 fn 执行时产生的堆栈信息
-    // 执行函数
-    return result = fn.apply(null, params);
-  }
-
-  return evaluate(fn, paramSource);
-}
-},{"callsite":"/Users/karen/Documents/my_project/recursivParser/node_modules/callsite/index.js"}],"/Users/karen/Documents/my_project/recursivParser/main.js":[function(require,module,exports){
-var analyser = require('./analyser.js');
-var formObject = require('./object.js');
-
+},{}],"/Users/karen/Documents/my_project/recursivParser/main.js":[function(require,module,exports){
 //1.inject callsite
 //2.call it
 //3.get callste data
@@ -119,37 +113,67 @@ var formObject = require('./object.js');
 //5.form an object
 //6.use the object to animate
 
-var fibSources = [
-  'function fib(num) {',
-  '  if (num === 0) return 0;',
-  '  if (num === 1) return 1;',
-  '  return fib(num - 1) + fib(num - 2);',
-  '}'
-].join('\n');
+var inject = require('./inject.js');
+var evaluate = require('./evaluate.js');
+var visualize = require('./visualize.js');
 
-var callSource = 'fib(6);';
+var editor1 = ace.edit("editor1");
+editor1.setTheme("ace/theme/monokai");
+editor1.getSession().setMode("ace/mode/javascript");
+
+var editor2 = ace.edit("editor2");
+editor2.setTheme("ace/theme/monokai");
+editor2.getSession().setMode("ace/mode/javascript");
 
 // var fib = inject(fibSources);
 // var res = evaluate(fib, 6);
 
-var fib = analyser.injector(fibSources);
-var res = analyser.evaluator(fib, callSource);
-
-//formObject(res);
-
+//document.onload = function () {
+//
+// var fib = analyser.injector(fibSources);
+// var res = analyser.evaluator(fib, callSource);
 // 输出结果
 
-console.log('generate fib function:');
-console.log(fib);
-// var a = '';
-// eval('a = fib(6)');
-// console.log(a);
-//console.log(fib(6))
+// console.log('generate fib function:');
+// console.log(fib);
 
-console.log('fib result: ', res.result);
+// console.log('fib result: ', res.result);
 
-formObject(res);
-},{"./analyser.js":"/Users/karen/Documents/my_project/recursivParser/analyser.js","./object.js":"/Users/karen/Documents/my_project/recursivParser/object.js"}],"/Users/karen/Documents/my_project/recursivParser/node_modules/callsite/index.js":[function(require,module,exports){
+// visibleObject(res);
+
+//}
+function getData() {
+  visualize(evaluate(inject(editor1.getValue()), editor2.getValue()));
+}
+
+getData();
+
+editor1.on('change', function () {
+
+  try {
+    eval(editor1.getValue());
+  } catch (error) {
+    console.log('ಥ_ಥ ' + error);
+    return;
+  }
+
+  getData();
+
+});
+
+editor2.on('change', function () {
+
+  try {
+    eval(editor1.getValue());
+  } catch (error) {
+    console.log('ಥ_ಥ ' + error);
+    return;
+  }
+
+  getData();
+
+});
+},{"./evaluate.js":"/Users/karen/Documents/my_project/recursivParser/evaluate.js","./inject.js":"/Users/karen/Documents/my_project/recursivParser/inject.js","./visualize.js":"/Users/karen/Documents/my_project/recursivParser/visualize.js"}],"/Users/karen/Documents/my_project/recursivParser/node_modules/callsite/index.js":[function(require,module,exports){
 
 module.exports = function(){
   var orig = Error.prepareStackTrace;
@@ -161,17 +185,18 @@ module.exports = function(){
   return stack;
 };
 
-},{}],"/Users/karen/Documents/my_project/recursivParser/object.js":[function(require,module,exports){
-module.exports = FormObject;
-
-function FormObject(res) {
+},{}],"/Users/karen/Documents/my_project/recursivParser/visualize.js":[function(require,module,exports){
+module.exports = function (res) {
 
   // 捕获到的 stacks
-  var stacks = res.stacks;
+  var info = res.stacks;
 
-  stacks.forEach(function (stack, index) {
+  //console.log(info);
+
+  info.forEach(function (stack, index) {
     console.log();
-    console.log('func %s with arguments %j, result %s:', index, stack.args, stack.result);
+    console.log('func %s with arguments %s, result %s:', index, JSON.stringify(stack.args), stack.result);
+
     for (var i = 0; i < stack.stacks.length; i++) {
       var s = stack.stacks[i];
       var fnName = s.getFunctionName();
@@ -179,8 +204,20 @@ function FormObject(res) {
       if (fnName === 'eval') {
         return;
       }
+      // console.log('%s level: %s, this: %s, type: %s, method: %s, function: %s, line: %s, column: %s, evalOrigin: %s',
+      //   new Array(i * 2 + 1).join(' '),
+      //   i,
+      //   s.getThis(),
+      //   s.getTypeName(),
+      //   s.getMethodName(),
+      //   s.getFunctionName(),
+      //   s.getLineNumber(),
+      //   s.getColumnNumber(),
+      //   s.getEvalOrigin()
+      // );
       console.log('%s level: %s, function: %s, line: %s, column: %s',
-        new Array(i * 2 + 1).join(' '), i, s.getFunctionName(), s.getLineNumber(), s.getColumnNumber());
+        new Array(i * 2 + 1).join(' '), i, s.getFunctionName(), s.getLineNumber(), s.getColumnNumber()
+      );
     }
   });
 

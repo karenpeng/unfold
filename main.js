@@ -1,6 +1,3 @@
-var analyser = require('./analyser.js');
-var formObject = require('./object.js');
-
 //1.inject callsite
 //2.call it
 //3.get callste data
@@ -8,33 +5,63 @@ var formObject = require('./object.js');
 //5.form an object
 //6.use the object to animate
 
-var fibSources = [
-  'function fib(num) {',
-  '  if (num === 0) return 0;',
-  '  if (num === 1) return 1;',
-  '  return fib(num - 1) + fib(num - 2);',
-  '}'
-].join('\n');
+var inject = require('./inject.js');
+var evaluate = require('./evaluate.js');
+var visualize = require('./visualize.js');
 
-var callSource = 'fib(6);';
+var editor1 = ace.edit("editor1");
+editor1.setTheme("ace/theme/monokai");
+editor1.getSession().setMode("ace/mode/javascript");
+
+var editor2 = ace.edit("editor2");
+editor2.setTheme("ace/theme/monokai");
+editor2.getSession().setMode("ace/mode/javascript");
 
 // var fib = inject(fibSources);
 // var res = evaluate(fib, 6);
 
-var fib = analyser.injector(fibSources);
-var res = analyser.evaluator(fib, callSource);
-
-//formObject(res);
-
+//document.onload = function () {
+//
+// var fib = analyser.injector(fibSources);
+// var res = analyser.evaluator(fib, callSource);
 // 输出结果
 
-console.log('generate fib function:');
-console.log(fib);
-// var a = '';
-// eval('a = fib(6)');
-// console.log(a);
-//console.log(fib(6))
+// console.log('generate fib function:');
+// console.log(fib);
 
-console.log('fib result: ', res.result);
+// console.log('fib result: ', res.result);
 
-formObject(res);
+// visibleObject(res);
+
+//}
+function getData() {
+  visualize(evaluate(inject(editor1.getValue()), editor2.getValue()));
+}
+
+getData();
+
+editor1.on('change', function () {
+
+  try {
+    eval(editor1.getValue());
+  } catch (error) {
+    console.log('ಥ_ಥ ' + error);
+    return;
+  }
+
+  getData();
+
+});
+
+editor2.on('change', function () {
+
+  try {
+    eval(editor1.getValue());
+  } catch (error) {
+    console.log('ಥ_ಥ ' + error);
+    return;
+  }
+
+  getData();
+
+});
