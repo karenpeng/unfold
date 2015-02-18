@@ -2,7 +2,7 @@
 
 ======================
 
-**[Unfold](http://karenpeng.github.io/unfold/)** is a website that takes any input recursive function and unveil the stack by animating their layers one by one.
+**[Unfold](http://karenpeng.github.io/unfold/)** is a website that takes any input recursive function and unveils the stack by animating their layers one by one.
 V8 engine callsite is used to get recursive layers. Also the input code is manipulated as a string in some wacky ways :ghost:
 
 =======================

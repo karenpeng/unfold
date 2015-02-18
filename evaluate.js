@@ -11,8 +11,6 @@ module.exports = function (fn, paramSource) {
 
   function evaluate(fn, str) {
 
-    console.log(str)
-
     var res = str.match(paramRe);
     if (!res) {
       throw new Error('parameter not found');

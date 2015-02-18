@@ -12,8 +12,6 @@ module.exports = function (fn, paramSource) {
 
   function evaluate(fn, str) {
 
-    console.log(str)
-
     var res = str.match(paramRe);
     if (!res) {
       throw new Error('parameter not found');
@@ -171,6 +169,10 @@ editor2.on('change', function () {
   }
 
   getData();
+
+  function yourmotherChecker() {
+
+  }
 
 });
 },{"./evaluate.js":"/Users/karen/Documents/my_project/recursivParser/evaluate.js","./inject.js":"/Users/karen/Documents/my_project/recursivParser/inject.js","./visualize.js":"/Users/karen/Documents/my_project/recursivParser/visualize.js"}],"/Users/karen/Documents/my_project/recursivParser/node_modules/callsite/index.js":[function(require,module,exports){
