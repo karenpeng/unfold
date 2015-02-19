@@ -5,9 +5,10 @@
 //5.form an object
 //6.use the object to animate
 
-var inject = require('./inject.js');
-var evaluate = require('./evaluate.js');
-var visualize = require('./visualize.js');
+// var inject = require('./inject.js');
+// var evaluate = require('./evaluate.js');
+var coverify = require('./coverify.js');
+//var visualize = require('./visualize.js');
 
 var editor1 = ace.edit("editor1");
 editor1.setTheme("ace/theme/monokai");
@@ -16,7 +17,6 @@ editor1.getSession().setMode("ace/mode/javascript");
 var editor2 = ace.edit("editor2");
 editor2.setTheme("ace/theme/monokai");
 editor2.getSession().setMode("ace/mode/javascript");
-
 // var fib = inject(fibSources);
 // var res = evaluate(fib, 6);
 
@@ -35,7 +35,8 @@ editor2.getSession().setMode("ace/mode/javascript");
 
 //}
 function getData() {
-  visualize(evaluate(inject(editor1.getValue()), editor2.getValue()));
+  //visualize(evaluate(inject(editor1.getValue()), editor2.getValue()));
+  coverify(editor1.getValue().concat(editor2.getValue()));
 }
 
 getData();
