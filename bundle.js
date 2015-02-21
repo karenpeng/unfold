@@ -115,7 +115,7 @@ function getData() {
     console.log(coverify(editor1.getValue().concat(editor2.getValue())));
     //console.log
   } catch (error) {
-    console.log(error);
+    console.log('Caught execption: s%', error);
     return;
   }
 }
@@ -123,24 +123,20 @@ function getData() {
 getData();
 
 editor1.on('change', function () {
-
   try {
     eval(editor1.getValue());
   } catch (error) {
-    console.log('OOPS ' + error);
+    console.log('Caught execption: s%', error);
     return;
   }
-
   getData();
-
 });
 
 editor2.on('change', function () {
-
   try {
     eval(editor1.getValue());
   } catch (error) {
-    console.log('OOPS ' + error);
+    console.log('Caught execption: s%', error);
     return;
   }
   getData();

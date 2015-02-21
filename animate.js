@@ -1,6 +1,6 @@
 module.exports = animate;
 
-function animate(arr) {
+function* animate(arr) {
   var stack = [];
   for (var i = 0; i < arr.length; i++) {
     if (typeof arr[i] === 'string') {
