@@ -46,7 +46,7 @@ module.exports = function (src) {
     args = [].slice.call(args).map(inspect);
     console.log(indent + nodes[id].id.name + '(' + args.join(', ') + ')');
 
-    var str = indent + nodes[id].id.name + '(' + args.join(', ') + ')';
+    var str = nodes[id].id.name + '(' + args.join(', ') + ')';
     _obj.push(str);
     stack.push(id);
   }

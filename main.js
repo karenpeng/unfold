@@ -18,33 +18,24 @@ editor1.getSession().setMode("ace/mode/javascript");
 var editor2 = ace.edit("editor2");
 editor2.setTheme("ace/theme/monokai");
 editor2.getSession().setMode("ace/mode/javascript");
-// var fib = inject(fibSources);
-// var res = evaluate(fib, 6);
-
-//document.onload = function () {
-//
-// var fib = analyser.injector(fibSources);
-// var res = analyser.evaluator(fib, callSource);
-// 输出结果
-
-// console.log('generate fib function:');
-// console.log(fib);
-
-// console.log('fib result: ', res.result);
-
-// visibleObject(res);
-
-//}
 
 function getData() {
   //visualize(evaluate(inject(editor1.getValue()), editor2.getValue()));
   try {
-    console.log(coverify(editor1.getValue().concat(editor2.getValue())));
-    //console.log
+    var result = coverify(editor1.getValue().concat(editor2.getValue()));
+    console.log(result);
   } catch (error) {
     console.log('Caught execption: s%', error);
     return;
   }
+
+  var iterator = animate(result);
+  setInterval(function () {
+    var it = iterator.next();
+    if (it.done) return;
+    it.value();
+  }, 1000);
+
 }
 
 getData();

@@ -1,14 +1,14 @@
 module.exports = function (defineSource) {
 
-  // function fib() {} 形式的正则
+  // function fibonacci() {} 形式的正则
   // 函数名和参数列表的地方用括号括起来
-  // 这样 'function fib(num) {}'.match(functionRe) 的结果数组的第二个参数会是函数名，第三个参数会是函数列表
+  // 这样 'function fibonacci(num) {}'.match(functionRe) 的结果数组的第二个参数会是函数名，第三个参数会是函数列表
   var functionRe = /function\s*(\S*)\s*\((.*?)\)\s*\{/;
 
   // 用来注入的正则需要带 g 参数，用一个新的区分开来
   var functionReG = /function\s*(\S*)\s*\((.*?)\)\s*\{/g;
 
-  // var fib = function () {} 形式的函数正则
+  // var fibonacci = function () {} 形式的函数正则
   var varFunctionReG = /var\s+\S*\s*=\s*function\s*\S*\s*\((.*?)\)\s*\{/g;
 
   // 返回语句的正则

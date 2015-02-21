@@ -38,13 +38,13 @@
 <body>
   <div id="animate"></div>
   <div id="editor1">//define a function:
-function fib(num) {
+function fibonacci(num) {
    if (num === 0) return 0;
    if (num === 1) return 1;
-   return fib(num - 1) + fib(num - 2);
+   return fibonacci(num - 1) + fibonacci(num - 2);
   }</div>
   <div id="editor2">//call a function
-fib(6);</div>
+fibonacci(6);</div>
 </body>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.8/ace.js"></script>
 <script src="bundle.js"></script>

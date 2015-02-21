@@ -1,17 +1,34 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/karen/Documents/my_project/recursivParser/animate.js":[function(require,module,exports){
 module.exports = animate;
 
-function animate(arr) {
+function* animate(arr) {
+  console.log('hello?')
   var stack = [];
-  for (var i = 0; i < arr.length; i++) {
-    if (typeof arr[i] === 'string') {
-      stack.push(arr[i]);
-    } else if (typeof arr[i] === Number) {
-      stack[i] = arr[i];
-      stack.pop();
-    }
+
+  function pushPush() {
+    stack.push(arr[i]);
+    console.log('push ' + stack.toString())
   }
 
+  function changeValue() {
+    stack[stack.length - 1] = arr[i];
+    console.log('change value ' + stack.toString())
+  }
+
+  function popPop() {
+    stack.pop();
+    console.log('pop ' + stack.toString())
+  }
+
+  for (var i = 0; i < arr.length; i++) {
+    if (typeof arr[i] === 'string') {
+      yield pushPush;
+    } else if (typeof arr[i] === 'number') {
+      yield changeValue;
+      yield popPop;
+    }
+  }
+  console.log(stack)
 }
 },{}],"/Users/karen/Documents/my_project/recursivParser/coverify.js":[function(require,module,exports){
 var falafel = require('falafel');
@@ -62,7 +79,7 @@ module.exports = function (src) {
     args = [].slice.call(args).map(inspect);
     console.log(indent + nodes[id].id.name + '(' + args.join(', ') + ')');
 
-    var str = indent + nodes[id].id.name + '(' + args.join(', ') + ')';
+    var str = nodes[id].id.name + '(' + args.join(', ') + ')';
     _obj.push(str);
     stack.push(id);
   }
@@ -91,33 +108,24 @@ editor1.getSession().setMode("ace/mode/javascript");
 var editor2 = ace.edit("editor2");
 editor2.setTheme("ace/theme/monokai");
 editor2.getSession().setMode("ace/mode/javascript");
-// var fib = inject(fibSources);
-// var res = evaluate(fib, 6);
-
-//document.onload = function () {
-//
-// var fib = analyser.injector(fibSources);
-// var res = analyser.evaluator(fib, callSource);
-// 输出结果
-
-// console.log('generate fib function:');
-// console.log(fib);
-
-// console.log('fib result: ', res.result);
-
-// visibleObject(res);
-
-//}
 
 function getData() {
   //visualize(evaluate(inject(editor1.getValue()), editor2.getValue()));
   try {
-    console.log(coverify(editor1.getValue().concat(editor2.getValue())));
-    //console.log
+    var result = coverify(editor1.getValue().concat(editor2.getValue()));
+    console.log(result);
   } catch (error) {
     console.log('Caught execption: s%', error);
     return;
   }
+
+  var iterator = animate(result);
+  setInterval(function () {
+    var it = iterator.next();
+    if (it.done) return;
+    it.value();
+  }, 1000);
+
 }
 
 getData();
