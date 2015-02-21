@@ -1,12 +1,27 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/karen/Documents/my_project/recursivParser/coverify.js":[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/karen/Documents/my_project/recursivParser/animate.js":[function(require,module,exports){
+module.exports = animate;
+
+function animate(arr) {
+  var stack = [];
+  for (var i = 0; i < arr.length; i++) {
+    if (typeof arr[i] === 'string') {
+      stack.push(arr[i]);
+    } else if (typeof arr[i] === Number) {
+      stack[i] = arr[i];
+      stack.pop();
+    }
+  }
+
+}
+},{}],"/Users/karen/Documents/my_project/recursivParser/coverify.js":[function(require,module,exports){
 var falafel = require('falafel');
 var inspect = require('object-inspect');
-var fs = require('fs');
-//var src = fs.readFileSync('fib.js', 'utf8');
 
 module.exports = function (src) {
+
   var id = 0;
   var nodes = {};
+  var _obj = [];
 
   var out = falafel(src, function (node) {
     if (node.type === 'FunctionDeclaration' || node.type === 'FunctionExpression') {
@@ -27,12 +42,18 @@ module.exports = function (src) {
     }
   }).toString();
 
+  console.log(out);
+  console.log(nodes);
+
   var stack = [];
   Function(['_exit', '_enter'], out)(exit, enter);
 
   function exit(id, value) {
     stack.pop();
-    console.log(value);
+    var indent = Array(stack.length + 1).join(' ');
+    console.log(indent + value);
+
+    _obj.push(value);
     return value;
   }
 
@@ -40,11 +61,16 @@ module.exports = function (src) {
     var indent = Array(stack.length + 1).join(' ');
     args = [].slice.call(args).map(inspect);
     console.log(indent + nodes[id].id.name + '(' + args.join(', ') + ')');
+
+    var str = indent + nodes[id].id.name + '(' + args.join(', ') + ')';
+    _obj.push(str);
     stack.push(id);
   }
 
+  return _obj;
+
 }
-},{"falafel":"/Users/karen/Documents/my_project/recursivParser/node_modules/falafel/index.js","fs":"/usr/local/lib/node_modules/watchify/node_modules/browserify/lib/_empty.js","object-inspect":"/Users/karen/Documents/my_project/recursivParser/node_modules/object-inspect/index.js"}],"/Users/karen/Documents/my_project/recursivParser/main.js":[function(require,module,exports){
+},{"falafel":"/Users/karen/Documents/my_project/recursivParser/node_modules/falafel/index.js","object-inspect":"/Users/karen/Documents/my_project/recursivParser/node_modules/object-inspect/index.js"}],"/Users/karen/Documents/my_project/recursivParser/main.js":[function(require,module,exports){
 //1.inject callsite
 //2.call it
 //3.get callste data
@@ -56,6 +82,7 @@ module.exports = function (src) {
 // var evaluate = require('./evaluate.js');
 var coverify = require('./coverify.js');
 //var visualize = require('./visualize.js');
+var animate = require('./animate.js');
 
 var editor1 = ace.edit("editor1");
 editor1.setTheme("ace/theme/monokai");
@@ -81,9 +108,16 @@ editor2.getSession().setMode("ace/mode/javascript");
 // visibleObject(res);
 
 //}
+
 function getData() {
   //visualize(evaluate(inject(editor1.getValue()), editor2.getValue()));
-  coverify(editor1.getValue().concat(editor2.getValue()));
+  try {
+    console.log(coverify(editor1.getValue().concat(editor2.getValue())));
+    //console.log
+  } catch (error) {
+    console.log(error);
+    return;
+  }
 }
 
 getData();
@@ -93,7 +127,7 @@ editor1.on('change', function () {
   try {
     eval(editor1.getValue());
   } catch (error) {
-    console.log('ಥ_ಥ ' + error);
+    console.log('OOPS ' + error);
     return;
   }
 
@@ -106,18 +140,12 @@ editor2.on('change', function () {
   try {
     eval(editor1.getValue());
   } catch (error) {
-    console.log('ಥ_ಥ ' + error);
+    console.log('OOPS ' + error);
     return;
   }
-
   getData();
-
-  function yourmotherChecker() {
-
-  }
-
 });
-},{"./coverify.js":"/Users/karen/Documents/my_project/recursivParser/coverify.js"}],"/Users/karen/Documents/my_project/recursivParser/node_modules/falafel/index.js":[function(require,module,exports){
+},{"./animate.js":"/Users/karen/Documents/my_project/recursivParser/animate.js","./coverify.js":"/Users/karen/Documents/my_project/recursivParser/coverify.js"}],"/Users/karen/Documents/my_project/recursivParser/node_modules/falafel/index.js":[function(require,module,exports){
 var parse = require('acorn').parse;
 
 var objectKeys = Object.keys || function (obj) {
@@ -3006,7 +3034,5 @@ function inspectString (str) {
         return '\\x' + (n < 0x10 ? '0' : '') + n.toString(16);
     }
 }
-
-},{}],"/usr/local/lib/node_modules/watchify/node_modules/browserify/lib/_empty.js":[function(require,module,exports){
 
 },{}]},{},["/Users/karen/Documents/my_project/recursivParser/main.js"]);

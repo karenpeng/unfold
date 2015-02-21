@@ -9,6 +9,7 @@
 // var evaluate = require('./evaluate.js');
 var coverify = require('./coverify.js');
 //var visualize = require('./visualize.js');
+var animate = require('./animate.js');
 
 var editor1 = ace.edit("editor1");
 editor1.setTheme("ace/theme/monokai");
@@ -34,9 +35,16 @@ editor2.getSession().setMode("ace/mode/javascript");
 // visibleObject(res);
 
 //}
+
 function getData() {
   //visualize(evaluate(inject(editor1.getValue()), editor2.getValue()));
-  coverify(editor1.getValue().concat(editor2.getValue()));
+  try {
+    console.log(coverify(editor1.getValue().concat(editor2.getValue())));
+    //console.log
+  } catch (error) {
+    console.log(error);
+    return;
+  }
 }
 
 getData();
@@ -46,7 +54,7 @@ editor1.on('change', function () {
   try {
     eval(editor1.getValue());
   } catch (error) {
-    console.log('ಥ_ಥ ' + error);
+    console.log('OOPS ' + error);
     return;
   }
 
@@ -59,14 +67,8 @@ editor2.on('change', function () {
   try {
     eval(editor1.getValue());
   } catch (error) {
-    console.log('ಥ_ಥ ' + error);
+    console.log('OOPS ' + error);
     return;
   }
-
   getData();
-
-  function yourmotherChecker() {
-
-  }
-
 });
