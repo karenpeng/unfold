@@ -2,50 +2,21 @@
 <html lang="en">
 <head>
   <title>unfold</title>
-  <link href='http://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
-  <style type="text/css" media="screen">
-    html, body{
-      top: 0;
-      left: 0;
-      padding: 0;
-      margin: 0;
-      background-color: black;
-    }
-    #editor1 {
-        position: absolute;
-        height: 70%;
-        top: 0;
-        right: 0;
-        bottom: 30%;
-        left: 0;
-        width: 400px;
-    }
-    #editor2 {
-        position: absolute;
-        height: 30%;
-        top: 70%;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        width: 400px;
-    }
-    #animate{
-        font-family: 'VT323';
-        color: green;
-    }
-  </style>
+ <!--  <link href='http://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'> -->
+  <!--  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'> -->
+  <link rel="stylesheet" type="text/css" href="css/style.css"/>
 </head>
 <body>
-  <div id="animate"></div>
-  <div id="editor1">//define a function:
+<!--   <div id="editor1">//define a function:
 function fibonacci(num) {
    if (num === 0) return 0;
    if (num === 1) return 1;
    return fibonacci(num - 1) + fibonacci(num - 2);
   }</div>
   <div id="editor2">//call a function
-fibonacci(6);</div>
+fibonacci(6);</div> -->
+  <div id="content"></div>
 </body>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.8/ace.js"></script>
+<!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.8/ace.js"></script> -->
 <script src="bundle.js"></script>
 </html>

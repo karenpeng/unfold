@@ -37,7 +37,11 @@ module.exports = function (src) {
     var indent = Array(stack.length + 1).join(' ');
     console.log(indent + value);
 
+    // _obj.push({
+    //   'return': value
+    // });
     _obj.push(value);
+
     return value;
   }
 
@@ -46,8 +50,13 @@ module.exports = function (src) {
     args = [].slice.call(args).map(inspect);
     console.log(indent + nodes[id].id.name + '(' + args.join(', ') + ')');
 
-    var str = nodes[id].id.name + '(' + args.join(', ') + ')';
+    var str = indent + nodes[id].id.name + '(' + args.join(', ') + ')';
+
+    // _obj.push({
+    //   'func': str
+    // });
     _obj.push(str);
+
     stack.push(id);
   }
 

@@ -1,36 +1,72 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/karen/Documents/my_project/recursivParser/animate.js":[function(require,module,exports){
-module.exports = animate;
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/karen/Documents/my_project/recursivParser/js/animate.js":[function(require,module,exports){
+module.exports = {
+  updateStack: updateStack,
+  typing: typing,
+  makeDom: makeDom
+}
 
-function* animate(arr) {
-  console.log('hello?')
-  var stack = [];
+function* updateStack(arr, stack) {
+  console.log(arr);
+  //var stack = [];
 
   function pushPush() {
+    //stack.push(arr[i]['func']);
+    //stack.push('<p>' + arr[i].replace(/\s/g, '&nbsp') + '</p>');
     stack.push(arr[i]);
-    console.log('push ' + stack.toString())
+    //console.log('push ' + stack.toString())
+    //return stack;
   }
 
   function changeValue() {
-    stack[stack.length - 1] = arr[i];
-    console.log('change value ' + stack.toString())
+    // stack[stack.length - 1] = arr[i]['return'];
+    //stack[stack.length - 1] = '<p>' + arr[i] + '</p>';
+    stack[stack.length - 1] = arr[i] + '';
+    //console.log('change value ' + stack.toString())
+    //return stack;
   }
 
   function popPop() {
     stack.pop();
-    console.log('pop ' + stack.toString())
+    //console.log('pop ' + stack.toString())
+    //return stack;
   }
 
   for (var i = 0; i < arr.length; i++) {
-    if (typeof arr[i] === 'string') {
-      yield pushPush;
-    } else if (typeof arr[i] === 'number') {
+    //this is bad b/c what if it dose not return number? T_T
+    //if (arr[i]['func']) {
+    //if it returns a function
+    if (typeof arr[i] !== 'string') {
+      //if (arr[i]['return']) {
       yield changeValue;
       yield popPop;
+      //if it does not return a function, it should be value i guess
+    } else {
+      yield pushPush;
     }
   }
-  console.log(stack)
+
+  //console.log(stack)
 }
-},{}],"/Users/karen/Documents/my_project/recursivParser/coverify.js":[function(require,module,exports){
+
+function* typing(str, callback) {
+  for (var i = 0; i < str.length; i++) {
+    yield str[i];
+
+    // function () {
+    //   callback();
+    //   return str[i];
+    // }
+  }
+}
+
+function makeDom(arr) {
+  var output = '';
+  arr.forEach(function (line) {
+    output += '<p>' + line.replace(/\s/g, '&nbsp') + '</p>';
+  });
+  return output;
+}
+},{}],"/Users/karen/Documents/my_project/recursivParser/js/coverify.js":[function(require,module,exports){
 var falafel = require('falafel');
 var inspect = require('object-inspect');
 
@@ -70,7 +106,11 @@ module.exports = function (src) {
     var indent = Array(stack.length + 1).join(' ');
     console.log(indent + value);
 
+    // _obj.push({
+    //   'return': value
+    // });
     _obj.push(value);
+
     return value;
   }
 
@@ -79,21 +119,24 @@ module.exports = function (src) {
     args = [].slice.call(args).map(inspect);
     console.log(indent + nodes[id].id.name + '(' + args.join(', ') + ')');
 
-    var str = nodes[id].id.name + '(' + args.join(', ') + ')';
+    var str = indent + nodes[id].id.name + '(' + args.join(', ') + ')';
+
+    // _obj.push({
+    //   'func': str
+    // });
     _obj.push(str);
+
     stack.push(id);
   }
 
   return _obj;
 
 }
-},{"falafel":"/Users/karen/Documents/my_project/recursivParser/node_modules/falafel/index.js","object-inspect":"/Users/karen/Documents/my_project/recursivParser/node_modules/object-inspect/index.js"}],"/Users/karen/Documents/my_project/recursivParser/main.js":[function(require,module,exports){
-//1.inject callsite
-//2.call it
-//3.get callste data
-//4.analysis the data
-//5.form an object
-//6.use the object to animate
+},{"falafel":"/Users/karen/Documents/my_project/recursivParser/node_modules/falafel/index.js","object-inspect":"/Users/karen/Documents/my_project/recursivParser/node_modules/object-inspect/index.js"}],"/Users/karen/Documents/my_project/recursivParser/js/main.js":[function(require,module,exports){
+//TODO:
+//1. think about graphic
+//2. think about live coding(pause provide a nice way to call the function maybe?)
+//3. think about return and declare a function, what if they are in the same line:)
 
 // var inject = require('./inject.js');
 // var evaluate = require('./evaluate.js');
@@ -101,55 +144,69 @@ var coverify = require('./coverify.js');
 //var visualize = require('./visualize.js');
 var animate = require('./animate.js');
 
-var editor1 = ace.edit("editor1");
-editor1.setTheme("ace/theme/monokai");
-editor1.getSession().setMode("ace/mode/javascript");
+// var editor1 = ace.edit("editor1");
+// editor1.setTheme("ace/theme/monokai");
+// editor1.getSession().setMode("ace/mode/javascript");
 
-var editor2 = ace.edit("editor2");
-editor2.setTheme("ace/theme/monokai");
-editor2.getSession().setMode("ace/mode/javascript");
+// var editor2 = ace.edit("editor2");
+// editor2.setTheme("ace/theme/monokai");
+// editor2.getSession().setMode("ace/mode/javascript");
+//
+function fibonacci(num) {
+  if (num === 0) return 0;
+  if (num === 1) return 1;
+  return fibonacci(num - 1) + fibonacci(num - 2);
+}
 
 function getData() {
   //visualize(evaluate(inject(editor1.getValue()), editor2.getValue()));
   try {
-    var result = coverify(editor1.getValue().concat(editor2.getValue()));
-    console.log(result);
+    //var result = coverify(editor1.getValue().concat(editor2.getValue()));
+    var result = coverify(fibonacci.toString().concat('fibonacci(6)'));
+    //console.log(result);
   } catch (error) {
     console.log('Caught execption: s%', error);
     return;
   }
 
-  var iterator = animate(result);
+  var info = {
+    stack: []
+  };
+  var iterator = animate.updateStack(result, info.stack);
   setInterval(function () {
     var it = iterator.next();
     if (it.done) return;
     it.value();
+    //wat???? pass by referrence?!!!
+    document.getElementById('content').innerHTML = animate.makeDom(info.stack);
+    //graphic(info.stack, 'content');
+    //animate.typing(info.stack), iterator.next());
   }, 1000);
 
 }
 
 getData();
 
-editor1.on('change', function () {
-  try {
-    eval(editor1.getValue());
-  } catch (error) {
-    console.log('Caught execption: s%', error);
-    return;
-  }
-  getData();
-});
+// editor1.on('change', function () {
+//   try {
+//     eval(editor1.getValue());
+//   } catch (error) {
+//     console.log('Caught execption: s%', error);
+//     return;
+//   }
+//   getData();
+// });
 
-editor2.on('change', function () {
-  try {
-    eval(editor1.getValue());
-  } catch (error) {
-    console.log('Caught execption: s%', error);
-    return;
-  }
-  getData();
-});
-},{"./animate.js":"/Users/karen/Documents/my_project/recursivParser/animate.js","./coverify.js":"/Users/karen/Documents/my_project/recursivParser/coverify.js"}],"/Users/karen/Documents/my_project/recursivParser/node_modules/falafel/index.js":[function(require,module,exports){
+// editor2.on('change', function () {
+//   try {
+//     eval(editor1.getValue());
+//   } catch (error) {
+//     console.log('Caught execption: s%', error);
+//     return;
+//   }
+//   getData();
+// });
+},{"./animate.js":"/Users/karen/Documents/my_project/recursivParser/js/animate.js","./coverify.js":"/Users/karen/Documents/my_project/recursivParser/js/coverify.js"}],"/Users/karen/Documents/my_project/recursivParser/node_modules/falafel/index.js":[function(require,module,exports){
 var parse = require('acorn').parse;
 
 var objectKeys = Object.keys || function (obj) {
@@ -3039,4 +3096,4 @@ function inspectString (str) {
     }
 }
 
-},{}]},{},["/Users/karen/Documents/my_project/recursivParser/main.js"]);
+},{}]},{},["/Users/karen/Documents/my_project/recursivParser/js/main.js"]);
