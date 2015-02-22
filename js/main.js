@@ -9,13 +9,13 @@ var coverify = require('./coverify.js');
 //var visualize = require('./visualize.js');
 var animate = require('./animate.js');
 
-// var editor1 = ace.edit("editor1");
-// editor1.setTheme("ace/theme/monokai");
-// editor1.getSession().setMode("ace/mode/javascript");
+var editor1 = ace.edit("editor1");
+editor1.setTheme("ace/theme/monokai");
+editor1.getSession().setMode("ace/mode/javascript");
 
-// var editor2 = ace.edit("editor2");
-// editor2.setTheme("ace/theme/monokai");
-// editor2.getSession().setMode("ace/mode/javascript");
+var editor2 = ace.edit("editor2");
+editor2.setTheme("ace/theme/monokai");
+editor2.getSession().setMode("ace/mode/javascript");
 //
 function fibonacci(num) {
   if (num === 0) return 0;
