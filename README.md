@@ -14,3 +14,10 @@ V8 engine callsite is used to get recursive layers. Also the input code is manip
 - Users need to **open console** to see
 
 TO DO: find a way to animate the data
+
+###Feb 24
+- User could input function in the editor
+- Animation implemented
+- Animation updates immediately according to input
+
+TO DO: it looks boring now, should i make it more boring(showing how dumb the computer is) / or should i make it interesting?

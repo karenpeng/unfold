@@ -26,8 +26,8 @@ module.exports = function (src) {
     }
   }).toString();
 
-  console.log(out);
-  console.log(nodes);
+  //console.log(out);
+  //console.log(nodes);
 
   var stack = [];
   Function(['_exit', '_enter'], out)(exit, enter);
