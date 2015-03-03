@@ -25,5 +25,6 @@ TO DO: it looks boring now, should i make it more boring(showing how dumb the co
 ####Mar3
 - **Migrate** to another [repo](http://github.com/karenpeng/inception), trying to use three js with first personal view roller coaster like methaphor for recursive layers
 - Graphic working
+- Use AST (Abstract Syntax Tree) instead of regex, abandon callsite
 
 TO DO: work on flow control
