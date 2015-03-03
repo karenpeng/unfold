@@ -23,7 +23,7 @@ TO DO: find a way to animate the data
 TO DO: it looks boring now, should i make it more boring(showing how dumb the computer is) / or should i make it interesting?
 
 ####Mar3
-- **Migrate**to another [repo](http://github.com/karenpeng/inception), trying to use three js with first personal view roller coaster like methaphor for recursive layers
+- **Migrate** to another [repo](http://github.com/karenpeng/inception), trying to use three js with first personal view roller coaster like methaphor for recursive layers
 - Graphic working
 
 TO DO: work on flow control
